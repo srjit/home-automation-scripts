@@ -1,0 +1,36 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+telegram_bot:
+  - platform: polling
+    api_key: "<tg api key>"
+    allowed_chat_ids:
+      - sree_id
+      - lia_id
+notify:
+  - platform: telegram
+    name: "sree"
+    chat_id: 
+  - platform: telegram
+    name: "lia"
+    chat_id: 
+command_line:
+  - sensor:
+      name: Moisture Sensor
+      unique_id: e637b1b7-daa6-4391-bbc6-94666dfe98a4
+      command: python3 /config/scripts/indoor_soil_moisture_info.py
+      scan_interval: 600  # Update interval in seconds
+      value_template: '{{ value_json["Sns1"] }}'
+      json_attributes:
+        - Sns1
+        - Sns2
+        - Sns3
+        - Sns4

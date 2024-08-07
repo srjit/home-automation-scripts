@@ -1,0 +1,383 @@
+- id: '1721152589859'
+  alias: Lia time to work increased
+  description: ''
+  trigger:
+  - type: value
+    platform: device
+    device_id: 23bd7d0d44d0b48a5541e550e11b5266
+    entity_id: 6953bc86a4c01ea1e7bcd6c4cab0184a
+    domain: sensor
+    above: 60
+  condition:
+  - condition: time
+    after: 07:10:00
+    before: 08:30:00
+    weekday:
+    - mon
+    - tue
+    - wed
+  action:
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: "\U0001F6A8 Time to your work via public commute is now over 60 minutes."
+  mode: single
+- id: '1721170483115'
+  alias: PiHole-Down-2
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: 1c1bf71a96b4998b40f80fea70db33c1
+    entity_id: 493dcc9378ab7b0b108d04c474d20e52
+    domain: switch
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001F6A8 Pi-Hole 2 is down!"
+  mode: single
+- id: '1721170550235'
+  alias: Pi-Hole down 1
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: dd006bbaf009b29cf490c2598a7db1e7
+    entity_id: a4a48a7c38c4a5b74421a061e10cd502
+    domain: switch
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001F6A8 Pi-Hole 1 is down!"
+  mode: single
+- id: '1721886814984'
+  alias: Humidity above 80
+  description: ''
+  trigger:
+  - type: humidity
+    platform: device
+    device_id: e807db7fbb3639c3115aa952a8df9a89
+    entity_id: eb4e90852f29e0e0b33ffb28186dc888
+    domain: sensor
+    above: 80
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001F4A6 High Humidity in living room: Above 80%!"
+  mode: single
+- id: '1721886926527'
+  alias: Low Humidity (below 50)
+  description: ''
+  trigger:
+  - type: humidity
+    platform: device
+    device_id: e807db7fbb3639c3115aa952a8df9a89
+    entity_id: eb4e90852f29e0e0b33ffb28186dc888
+    domain: sensor
+    below: 50
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: 'Low Humidity in living room: Below 50%!'
+  mode: single
+- id: '1722902147712'
+  alias: Motion Sensor after dark turns on Magic Lamp
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 620e6c8b7adf8de9af5450d7d39fc93e
+    entity_id: 2ad048d7bf6cd14f9ebff3886d30bc1d
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition:
+  - condition: sun
+    after: sunset
+    before: sunrise
+    enabled: true
+  - condition: device
+    type: is_off
+    device_id: c08b1114693480642a2fdc9a92f5f608
+    entity_id: 49310b0a42ce9a051684add0e1ce5dd6
+    domain: remote
+  action:
+  - type: turn_on
+    device_id: e83d3699353d53f2e58af1f0a69391ef
+    entity_id: 0792ba1f0f8ad8314b68fd2886c5c67f
+    domain: switch
+  mode: single
+- id: '1722903044933'
+  alias: Turn off if no motion is detected after 1am
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 620e6c8b7adf8de9af5450d7d39fc93e
+    entity_id: 2ad048d7bf6cd14f9ebff3886d30bc1d
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition:
+  - condition: time
+    after: 01:00:00
+    weekday:
+    - sat
+    - fri
+    - thu
+    - wed
+    - tue
+    - mon
+    - sun
+  action:
+  - type: turn_off
+    device_id: e83d3699353d53f2e58af1f0a69391ef
+    entity_id: 0792ba1f0f8ad8314b68fd2886c5c67f
+    domain: switch
+  mode: single
+- id: '1722908852188'
+  alias: Tg message
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: ef68f871dff241ffce4e2bc1b59d934e
+    entity_id: ff4028a76d82651cd34c98b13cce8230
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001F6A8 Someone opened the front door"
+  mode: single
+- id: '1722908927592'
+  alias: Lia leaves for work public commute
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: ef68f871dff241ffce4e2bc1b59d934e
+    entity_id: ff4028a76d82651cd34c98b13cce8230
+    domain: binary_sensor
+  condition:
+  - condition: time
+    before: 08:30:00
+    after: 07:00:00
+    weekday:
+    - mon
+    - tue
+    - wed
+  action:
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: "\n\U0001F68D Next Departures of 402: {{ state_attr('sensor.402_to_seattle_2',
+        'next_departures') }} \n\U0001F68D Next Departures of 425: {{ state_attr('sensor.425_to_seattle',
+        'next_departures') }} \n⚠️: Information is not real time."
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: '
+
+        ⏱️ Expected ETA via 402: {{ state_attr(''sensor.402_to_seattle_2'', ''destination_stop_arrival_time'')
+        }}
+
+        ⏱️ Expected ETA via 425: {{ state_attr(''sensor.425_to_seattle'', ''destination_stop_arrival_time'')
+        }}'
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: "I ♥️ you! Message when you get \U0001F68C ? (PS: I’m a \U0001F916.
+        Message \U0001F9D1\U0001F3FD‍\U0001F4BB)."
+  mode: single
+- id: '1722990115540'
+  alias: Aurora visibility alert
+  description: ''
+  trigger:
+  - type: turned_on
+    platform: device
+    device_id: 68bf79acebd2fc410d902949311d62ad
+    entity_id: 77d41bd43a1ddfd25c0f465a858d0a15
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: '⚡ NOAA Alert: Aurora might be visible!'
+  mode: single
+- id: '1722993325077'
+  alias: 'Turn on dream view after sundown '
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: c08b1114693480642a2fdc9a92f5f608
+    entity_id: 49310b0a42ce9a051684add0e1ce5dd6
+    domain: remote
+  condition:
+  - condition: sun
+    before: sunrise
+    after: sunset
+  action:
+  - type: turn_on
+    device_id: 423658d728ca24334067f02078063774
+    entity_id: 82c4bbe6de1a42bc223180249afd2267
+    domain: light
+  mode: single
+- id: '1722993605622'
+  alias: After 1.30am if tv is off and no one is around turn off dreamview
+  description: ''
+  trigger:
+  - platform: device
+    device_id: c08b1114693480642a2fdc9a92f5f608
+    domain: media_player
+    entity_id: 26872051553ef5d99f72d37d5a00eb6d
+    type: turned_off
+  condition:
+  - condition: time
+    after: 01:30:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  - type: is_no_motion
+    condition: device
+    device_id: 620e6c8b7adf8de9af5450d7d39fc93e
+    entity_id: 2ad048d7bf6cd14f9ebff3886d30bc1d
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  action:
+  - type: turn_off
+    device_id: 423658d728ca24334067f02078063774
+    entity_id: 82c4bbe6de1a42bc223180249afd2267
+    domain: light
+  mode: single
+- id: '1723012936744'
+  alias: Temp exceeded 80 F
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: e807db7fbb3639c3115aa952a8df9a89
+    entity_id: 4a28164b94256ac6f73031ac5cbc570b
+    domain: sensor
+    above: 80
+  condition: []
+  action:
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: "\U0001F975 Temperature in living room has exceeded 80 F "
+    enabled: true
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001F975 Temperature in living room has exceeded 80 F"
+  mode: single
+- id: '1723046924219'
+  alias: Lia commute to home from work
+  description: ''
+  trigger:
+  - platform: time
+    at: '16:45:00'
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    after: '16:00:00'
+  action:
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: "\U0001F68D Next departures of 402: {{ state_attr('sensor.402_to_lynnwood',
+        'next_departures') }}\n\U0001F68D Next Departures of 422: {{ state_attr('sensor.422_to_lynnwood',
+        'next_departures') }} \n⚠️ Information is not real time."
+  mode: single
+- id: '1723047839677'
+  alias: Lia - Wednesday Evening!
+  description: ''
+  trigger:
+  - platform: time
+    at: '17:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - wed
+    after: '16:00:00'
+  action:
+  - service: notify.lia
+    metadata: {}
+    data:
+      message: "\U0001F916 is happy that you can work from home for the next two days!
+        \U0001F351"
+  mode: single
+- id: '1723063629815'
+  alias: Soil Moisture sensor 1 value is above threshold
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.moisture_sensor
+    attribute: Sns1
+    above: 2500
+  condition: []
+  action:
+  - service: notify.sreejith
+    data:
+      message: "\U0001FAB4 Soil moisture sensor 1 value is above threshold!"
+  mode: single
+- id: '1723063951662'
+  alias: Soil Moisture sensor 2 value is above threshold
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.moisture_sensor
+    attribute: Sns2
+    above: 2500
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001FAB4Soil moisture sensor 2 value is above threshold."
+  mode: single
+- id: '1723064108356'
+  alias: Soil Moisture sensor 3 value is above threshold
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id:
+    - sensor.moisture_sensor
+    attribute: Sns3
+    above: 2500
+  condition: []
+  action:
+  - service: notify.sreejith
+    metadata: {}
+    data:
+      message: "\U0001FAB4 Soil Moisture sensor 3 value is above threshold"
+  mode: single
