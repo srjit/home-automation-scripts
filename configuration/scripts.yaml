@@ -1,0 +1,27 @@
+send_pump1_request:
+  alias: "Send Pump1 Request"
+  sequence:
+    - service: shell_command.run_pump_request
+      data:
+        pump_name: "Pump1"
+
+send_pump2_request:
+  alias: "Send Pump2 Request"
+  sequence:
+    - service: shell_command.run_pump_request
+      data:
+        pump_name: "Pump2"
+
+send_pump3_request:
+  alias: "Send Pump3 Request"
+  sequence:
+    - service: shell_command.run_pump_request
+      data:
+        pump_name: "Pump3"
+
+get_air_pollution:
+  alias: "Get Air Pollution Data"
+  sequence:
+    - service: command_line
+      data:
+        command: "python3 /config/scripts/air_quality.py"	
