@@ -81,9 +81,9 @@ template:
       - name: "Destination address"
         state: >
           {%- if is_state("input_select.destination", "Home") -%}
-            4200 Alderwood Mall Blvd, Lynnwood, WA 98036, USA
+            Home Address String
           {%- elif is_state("input_select.destination", "Work") -%}
-            Two Chairs, 2101 4th Ave #1850, Seattle, WA 98121
+            Work Address String
           {%- elif is_state("input_select.destination", "MyLoc") -%}
             device_tracker.myphone
           {%- else -%}
